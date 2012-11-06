@@ -2,6 +2,7 @@ var Card = function(rank, suit) {
   this.rank = rank;
   this.suit = suit;
   this.symbol = this.symbols[this.suit];
+  this.turned = false;
 };
 
 Card.prototype.symbols = {
@@ -35,6 +36,9 @@ var createDeck = function(n) {
     }
 };
 
+var hand = [];
+
+
 var shuffle = function() {
     var rand,savedCard;
     for(i=0; i<deck.length; i++) {
@@ -46,19 +50,48 @@ var shuffle = function() {
 };
 
 var deal = function() {
-    deck.shift();
+  if (deck.length > 0) {
+    hand.push(deck.shift());
+  } else {
+    $('.log').append('No more cards in deck!' + '<br/>');
+  }
 };
 
-var renderDeck = function() {
-    for (i = 0; i < deck.length; i++) {
-    $('body').append("<div class=\"" + deck[i].suit +  " card \"> " + deck[i].rank + ' '  + deck[i].symbol + "</div>");
-    }
+
+var render = function(DOMtarget) {
+    if (DOMtarget == '.deck' && deck.length > 0) {
+        var deckHtml = '';
+        for (i = 0; i < deck.length; i++) {
+          deckHtml += "<div class=\"" + deck[i].suit +  " card \"> " + deck[i].rank + ' '  + deck[i].symbol + "</div>";
+          $(DOMtarget).html(deckHtml);
+        }
+    } else if (DOMtarget == '.hand'  && hand.length > 0) {
+        var handHtml = '';
+        for (i = 0; i < hand.length; i++) {
+          handHtml += "<div class=\"" + hand[i].suit +  " card \"> " + hand[i].rank + ' '  + hand[i].symbol + "</div>";
+        $(DOMtarget).html(handHtml);
+        }
+    } else {
+      $(DOMtarget).html('');
+  }
 };
 
-createDeck(1);
-shuffle();
-// deal();
-renderDeck();
+
+$(document).ready(function(){
+  $('#make-deck').on('click',function(){
+    createDeck(1);
+    render('.deck');
+  });
+
+  $('#deal-card').on('click',function(){
+    deal();
+    render('.hand');
+    render('.deck');
+  });
+
+});
+
+
 
 
 
