@@ -83,11 +83,18 @@ $(document).ready(function(){
     render('.deck');
   });
 
+  $('#shuffle-deck').on('click',function(){
+    shuffle();
+    render('.deck');
+  });
+
   $('#deal-card').on('click',function(){
     deal();
     render('.hand');
     render('.deck');
   });
+
+
 
 });
 
