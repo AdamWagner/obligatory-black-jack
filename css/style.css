@@ -1,0 +1,17 @@
+.card {
+    height:75px;
+    width:40px;
+    background:#F8F2DA;
+    margin:5px;
+    float:left;
+    color:white;
+    padding:20px;
+    border-radius:4px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.8);
+}
+
+.C,.S{color:black;}
+
+.H,.D {color:red;}
+
+
