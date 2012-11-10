@@ -1,8 +1,9 @@
 var Card = function(rank, suit) {
   this.rank = rank;
+  this.value = this.values[this.rank];
   this.suit = suit;
   this.symbol = this.symbols[this.suit];
-  this.turned = false;
+  this.faceUp = false;
 };
 
 Card.prototype.symbols = {
@@ -12,11 +13,31 @@ Card.prototype.symbols = {
   "C" : "♣"
 };
 
+Card.prototype.values = {
+  "2"  : 2,
+  "3"  : 3,
+  "4"  : 4,
+  "5"  : 5,
+  "6"  : 6,
+  "7"  : 7,
+  "8"  : 8,
+  "9"  : 9,
+  "10" : 10,
+  "J"  : 10,
+  "Q"  : 10,
+  "K"  : 10,
+  "A"  : 11
+};
+
 Card.prototype.toString = function() {
   return this.rank + " of " + this.suit;
-}
+};
 
 var deck = [];
+var playerHand = [];
+var dealerHand = [];
+
+
 var createDeck = function(n) {
     
     // card ingredients
@@ -26,17 +47,17 @@ var createDeck = function(n) {
     var i, j, k;
     var rankLength = rank.length;
 
+
     // Create n decks
     for (i = 0; i < n; i++) {
         for (j = 0; j < suits.length; j++) {
             for (k = 0; k < rankLength; k++) {
-                deck[(j * rankLength) + k] = new Card(rank[k], suits[j]);
+                deck[deck.length] = new Card(rank[k], suits[j]);
             }
         }
     }
 };
 
-var hand = [];
 
 
 var shuffle = function() {
@@ -50,51 +71,69 @@ var shuffle = function() {
 };
 
 var deal = function() {
+
+  function turnOver() {
+    var topCard = deck.pop();
+    topCard['faceUp'] = true;
+    return topCard;
+  }
+  
   if (deck.length > 0) {
-    hand.push(deck.shift());
+    playerHand.push(turnOver());
   } else {
     $('.log').append('No more cards in deck!' + '<br/>');
   }
 };
 
 
-var render = function(DOMtarget) {
-    if (DOMtarget == '.deck' && deck.length > 0) {
-        var deckHtml = '';
-        for (i = 0; i < deck.length; i++) {
-          deckHtml += "<div class=\"" + deck[i].suit +  " card \"> " + deck[i].rank + ' '  + deck[i].symbol + "</div>";
-          $(DOMtarget).html(deckHtml);
-        }
-    } else if (DOMtarget == '.hand'  && hand.length > 0) {
-        var handHtml = '';
-        for (i = 0; i < hand.length; i++) {
-          handHtml += "<div class=\"" + hand[i].suit +  " card \"> " + hand[i].rank + ' '  + hand[i].symbol + "</div>";
-        $(DOMtarget).html(handHtml);
-        }
-    } else {
-      $(DOMtarget).html('');
+
+var render = function(array, domTarget) {
+  var html = '';
+  if (array.length === 0) {
+    $(domTarget).html('');
+  } else {
+    for (i = 0; i < array.length; i++) {
+      html += "<div data-faceUp=\"" + array[i].faceUp + "; \" style=\"left:" + i/3 + "px;top:" + i/3 + "px;\" class=\"" + array[i].suit +  " card \"> " + array[i].rank + ' '  + array[i].symbol + "</div>";
+      $(domTarget).html(html);
+    }
   }
 };
 
 
+function getScore(array) {
+  var score = 0,
+      scoreBefore = "<p>",
+      scoreAfter = "</p>";
+  for(i=0; i < array.length; i++ ) {
+    score += parseInt(array[i].value, 10);
+  }
+  $('.score').append(scoreBefore + score + scoreAfter);
+
+
+}
+
+var dealGame = function(){
+
+};
+
 $(document).ready(function(){
   $('#make-deck').on('click',function(){
     createDeck(1);
-    render('.deck');
+    render(deck, '.deck');
   });
 
   $('#shuffle-deck').on('click',function(){
     shuffle();
-    render('.deck');
+    render(deck, '.deck');
   });
 
   $('#deal-card').on('click',function(){
     deal();
-    render('.hand');
-    render('.deck');
+    getScore(playerHand);
+
+    render(deck, '.deck');
+    render(playerHand, '.player-hand');
   });
-
-
 
 });
 
