@@ -12,7 +12,7 @@ body { background: url("http://subtlepatterns.com/patterns/green-fibers.png"); }
 .control-bar a, .control-bar select { background: rgba(115, 140, 115, 0.6); padding: 18px 30px; border-radius: 10px; display: inline-block; color: rgba(199, 209, 199, 0.8); text-decoration: none; float: left; margin-right: 10px; }
 .control-bar select { position: relative; top: 14px; margin-right: 20px; }
 
-.hand a, .hand .control-bar select, .control-bar .hand select { background: rgba(115, 140, 115, 0.6); padding: 18px 30px; border-radius: 10px; display: inline-block; color: rgba(199, 209, 199, 0.8); text-decoration: none; float: left; float: right; position: relative; top: 38px; }
+.hand a, .hand .control-bar select, .control-bar .hand select { background: rgba(115, 140, 115, 0.6); padding: 18px 30px; border-radius: 10px; display: inline-block; color: rgba(199, 209, 199, 0.8); text-decoration: none; float: left; float: right; position: relative; top: 38px; margin-right: 15px; }
 
 .deck { position: relative; height: 200px; }
 
