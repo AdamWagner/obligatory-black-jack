@@ -1,0 +1,121 @@
+@import "compass";
+@import "normalize.css";
+@import "utility.css";
+// @import "compass/utilities/color";
+
+
+
+/* --------------------------------------------------------------------------------------- *\
+  Vars                                                                       
+/* --------------------------------------------------------------------------------------- */
+
+$width: 100%;
+$felt: url('http://subtlepatterns.com/patterns/pool_table.png');
+$felt2: url('http://subtlepatterns.com/patterns/green-fibers.png');
+$paper:hsl(48, 48%, 81%); 
+
+$interfaceBg: hsla(121 , 40% , 10% , 0.3);
+$interfaceFg: hsla(121 , 10% , 50% , 0.6);
+$interfaceFgTxt: hsla(121 , 10% , 80% , 0.8);
+
+
+@mixin bottom-round ($radius) {
+  border-bottom-left-radius: $radius;
+  border-bottom-right-radius: $radius;
+}
+
+
+@mixin button {
+  background:$interfaceFg;
+  padding:18px 30px;
+  border-radius:10px;
+  display:inline-block;
+  color:$interfaceFgTxt;
+  text-decoration:none;
+  float:left;
+}
+
+
+body {
+  background: $felt2;
+}
+
+* { box-sizing:border-box; }
+
+.container {
+  width:$width;
+  margin:auto;
+}
+
+.control-bar {
+  background:$interfaceBg;
+  padding:40px 20px;
+  a { @include button; margin-right:10px; }
+  select {
+    @extend a;
+    position:relative;
+    top:14px;
+    margin-right:20px;
+  }
+}
+
+.hand a {
+  @include button;
+  float:right;
+  position:relative;
+  top:38px;
+}
+
+.deck {
+  position:relative;
+  height:200px;
+}
+
+.deck.stacked .card {
+  position:absolute;
+  top:0;
+  left:0;
+}
+
+.card {
+    height:134px;
+    width:97px;
+    margin:5px;
+    float:left;
+    padding:20px;
+    border-radius:7px;
+    box-shadow:0 1px 5px rgba(0,0,0,0.7);
+    text-indent:-999px;
+    background:hsl(190, 51%, 35%);
+    border: solid 3px hsl(190, 50%, 17%);
+    font-size:1.4em;
+}
+
+.card + .card {
+  -webkit-transform: rotate(5deg);
+  position:relative;
+  left:-30px;
+}
+
+
+.card[data-faceUp*="true"], 
+.deck:hover .card {
+    background:$paper;
+    text-indent: 0;
+    border:none;
+}
+
+.C,.S { color:black; }
+
+.H,.D { color:red; }
+
+.hand {
+  background:$interfaceBg;
+  padding:30px 70px;
+  margin:20px 0;
+  height:200px;
+}
+
+.dealer {
+  border-bottom:solid 7px darken($interfaceBg, 5%);
+}

@@ -33,10 +33,27 @@ Card.prototype.toString = function() {
   return this.rank + " of " + this.suit;
 };
 
-var deck = [];
-var playerHand = [];
-var dealerHand = [];
+var Player = function(hand , selector, dealer) {
+  this.hand = hand;
+  this.selector = selector;
+  this.cssClass = selector.substr(1);
+  this.dealer = dealer;
+};
 
+
+var players = [];
+
+var createPlayers = function(n) {
+  players[0] = new Player( [] , '.dealer' , true);
+  var i;
+  for (i=1; i<n+1; i++) {
+    players[i] = new Player( [] , '.player' + (i) , false);
+  }
+};
+
+
+
+var deck = [];
 
 var createDeck = function(n) {
     
@@ -58,8 +75,6 @@ var createDeck = function(n) {
     }
 };
 
-
-
 var shuffle = function() {
     var rand,savedCard;
     for(i=0; i<deck.length; i++) {
@@ -70,34 +85,66 @@ var shuffle = function() {
     }
 };
 
-var deal = function() {
+function flipCard(player, topCard){
+  if(player.dealer === false || player.hand.length>0) { topCard.faceUp = true; }
+  return topCard;
+}
 
-  function turnOver() {
-    var topCard = deck.pop();
-    topCard['faceUp'] = true;
-    return topCard;
-  }
-  
+function deal(n, target) {
+  var index, topCard;
+  console.log(arguments.length);
   if (deck.length > 0) {
-    playerHand.push(turnOver());
-  } else {
-    $('.log').append('No more cards in deck!' + '<br/>');
-  }
-};
-
-
-
-var render = function(array, domTarget) {
-  var html = '';
-  if (array.length === 0) {
-    $(domTarget).html('');
-  } else {
-    for (i = 0; i < array.length; i++) {
-      html += "<div data-faceUp=\"" + array[i].faceUp + "; \" style=\"left:" + i/3 + "px;top:" + i/3 + "px;\" class=\"" + array[i].suit +  " card \"> " + array[i].rank + ' '  + array[i].symbol + "</div>";
-      $(domTarget).html(html);
+    if (arguments.length === 1) { // if target unspecified, deal to all players
+      for (k=0;k<n;k++) {
+        for (i=0;i<players.length;i++) {
+          topCard = deck.pop();
+          index = players[i].hand;
+          flipCard(players[i], topCard);
+          index[index.length] = topCard;
+        }
+      }
+    } else { // otherwise, deal to specified player
+        for (k=0;k<n;k++) {
+          topCard = deck.pop();
+          flipCard(target, topCard);
+          target.hand[target.hand.length] = topCard;
+      }
     }
   }
-};
+}
+
+var before = "<div ",
+    after = "</div>";
+
+
+function prepareDom(){
+  var container = '',
+      controls = '',
+      html = '';
+  for (i=0; i < players.length; i++) {
+    cssClass = players[i].cssClass;
+    if (players[i].dealer === false) { controls = "<a href=\"#\" id=\"hit\">Hit</a>"; }
+    container = before + "class=\"cards\">" + after;
+    html += before + " class=\"" + cssClass + " hand\">" + container + controls + after;
+  }
+    $('.playing-surface').append(html);
+}
+
+
+function render() {
+  for (i=0; i<players.length; i++) {
+    cardEls = '';
+    for (j=0; j<players[i].hand.length; j++) {
+      var currentCard = players[i].hand[j],
+      dataAttr = " data-faceUp=\"" + currentCard.faceUp + "\";",
+      cssClass = " class=\"" + currentCard.suit +  " card \"> ",
+      htmlRank = currentCard.rank,
+      htmlSymbol = currentCard.symbol;
+      cardEls += before + dataAttr + cssClass + htmlRank + htmlSymbol + after;
+    }
+    $(players[i].selector + " .cards").html(cardEls);
+  }
+}
 
 
 function getScore(array) {
@@ -108,34 +155,64 @@ function getScore(array) {
     score += parseInt(array[i].value, 10);
   }
   $('.score').append(scoreBefore + score + scoreAfter);
-
-
 }
 
-var dealGame = function(){
+function resetGame() {
+  $('.playing-surface').html('');
+  players = [];
+}
 
+
+var dealGame = function(){
+  // resetGame();
 };
 
 $(document).ready(function(){
-  $('#make-deck').on('click',function(){
+  $('#new-game').on('click',function(){
+    resetGame();
+    createPlayers(parseInt($('.control-bar select').val()));
+    prepareDom();
     createDeck(1);
-    render(deck, '.deck');
-  });
-
-  $('#shuffle-deck').on('click',function(){
     shuffle();
-    render(deck, '.deck');
+    deal(2);
+    render();
   });
 
-  $('#deal-card').on('click',function(){
-    deal();
-    getScore(playerHand);
+  $('#hit').live('click',function(){
+    var cssClass = $(this).parent().attr('class').split(' ')[0];
+    var i , target = null;
+    
+    for (i=0; i < players.length; i++) {
+      if(players[i].cssClass == cssClass) {
+        target = players[i];
+      }
+    }
 
-    render(deck, '.deck');
-    render(playerHand, '.player-hand');
+    deal(1 , target);
+    render();
+
   });
-
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

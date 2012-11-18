@@ -1,90 +1,33 @@
-body {
-  width:800px;
-  margin:auto;
-}
+@import url(normalize.css);
+@import url(utility.css);
+/* --------------------------------------------------------------------------------------- *\ Vars                                                                       
+/* --------------------------------------------------------------------------------------- */
+body { background: url("http://subtlepatterns.com/patterns/green-fibers.png"); }
 
-* { box-sizing:border-box; }
+* { box-sizing: border-box; }
 
-h1,h2,h3,h4,h5,h6 {
-  margin:0;
-  padding:0;
-  line-height:1em;
-}
+.container { width: 100%; margin: auto; }
 
-.header {
-  float:left;
-}
+.control-bar { background: rgba(15, 36, 16, 0.3); padding: 40px 20px; }
+.control-bar a, .control-bar select { background: rgba(115, 140, 115, 0.6); padding: 18px 30px; border-radius: 10px; display: inline-block; color: rgba(199, 209, 199, 0.8); text-decoration: none; float: left; margin-right: 10px; }
+.control-bar select { position: relative; top: 14px; margin-right: 20px; }
 
-.playing-surface {
-  width:600px;
-  float:right;
-  padding:20px;
-}
+.hand a, .hand .control-bar select, .control-bar .hand select { background: rgba(115, 140, 115, 0.6); padding: 18px 30px; border-radius: 10px; display: inline-block; color: rgba(199, 209, 199, 0.8); text-decoration: none; float: left; float: right; position: relative; top: 38px; }
 
-.sidebar {
-  width:200px;
-  background:#ddd;
-  float:left;
-}
+.deck { position: relative; height: 200px; }
 
-.sidebar > div {
-  padding:20px 15px;
-  border-bottom:solid 1px #ccc;
-}
+.deck.stacked .card { position: absolute; top: 0; left: 0; }
 
-.control-bar {
-  width:600px;
-  background:#f1f1f1;
-  padding:40px 20px;
-}
+.card { height: 134px; width: 97px; margin: 5px; float: left; padding: 20px; border-radius: 7px; box-shadow: 0 1px 5px rgba(0, 0, 0, 0.7); text-indent: -999px; background: #2c7887; border: solid 3px #163a41; font-size: 1.4em; }
 
-.control-bar a {
-  margin-right:20px;
-}
+.card + .card { -webkit-transform: rotate(5deg); position: relative; left: -30px; }
 
-.deck {
-  position:relative;
-  height:200px;
-}
+.card[data-faceUp*="true"], .deck:hover .card { background: #e6ddb7; text-indent: 0; border: none; }
 
-.deck.stacked .card {
-  position:absolute;
-  top:0;
-  left:0;
-}
+.C, .S { color: black; }
 
-.card {
-    height:100px;
-    width:75px;
-    margin:5px;
-    float:left;
-    padding:20px;
-    border-radius:4px;
-    box-shadow:0 1px 3px rgba(0,0,0,0.8);
-    text-indent:-999px;
-    background:hsl(190, 51%, 35%);
-    border: solid 3px hsl(190, 71%, 21%);
-}
+.H, .D { color: red; }
 
+.hand { background: rgba(15, 36, 16, 0.3); padding: 30px 70px; margin: 20px 0; height: 200px; }
 
-.card[data-faceUp*="true"], 
-.deck:hover .card {
-    background:#F8F2DA;
-    text-indent: 0;
-    border:none;
-}
-
-.C,.S { color:black; }
-
-.H,.D { color:red; }
-
-
-.hand,
-.deck {
-  clear:both;
-}
-
-.hand {
-  background:gray;
-}
-
+.dealer { border-bottom: solid 7px rgba(8, 18, 8, 0.3); }
